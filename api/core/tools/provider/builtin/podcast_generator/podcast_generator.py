@@ -10,6 +10,7 @@ class PodcastGeneratorProvider(BuiltinToolProviderController):
     def _validate_credentials(self, credentials: dict[str, Any]) -> None:
         tts_service = credentials.get("tts_service")
         api_key = credentials.get("api_key")
+        api_host = credentials.get("api_host")
 
         if not tts_service:
             raise ToolProviderCredentialValidationError("TTS service is not specified")
@@ -18,12 +19,12 @@ class PodcastGeneratorProvider(BuiltinToolProviderController):
             raise ToolProviderCredentialValidationError("API key is missing")
 
         if tts_service == "openai":
-            self._validate_openai_credentials(api_key)
+            self._validate_openai_credentials(api_key, api_host)
         else:
             raise ToolProviderCredentialValidationError(f"Unsupported TTS service: {tts_service}")
 
-    def _validate_openai_credentials(self, api_key: str) -> None:
-        client = openai.OpenAI(api_key=api_key)
+    def _validate_openai_credentials(self, api_key: str, api_host: str = None) -> None:
+        client = openai.OpenAI(api_key=api_key, api_base=api_host)
         try:
             # We're using a simple API call to validate the credentials
             client.models.list()

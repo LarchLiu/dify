@@ -41,6 +41,7 @@ class PodcastAudioGeneratorTool(BuiltinTool):
         script = tool_parameters.get("script", "")
         host1_voice = tool_parameters.get("host1_voice")
         host2_voice = tool_parameters.get("host2_voice")
+        api_host = tool_parameters.get("api_host")
 
         # Split the script into lines
         script_lines = [line for line in script.split("\n") if line.strip()]
@@ -57,7 +58,7 @@ class PodcastAudioGeneratorTool(BuiltinTool):
             raise ToolProviderCredentialValidationError("OpenAI API key is missing")
 
         # Initialize OpenAI client
-        client = openai.OpenAI(api_key=api_key)
+        client = openai.OpenAI(api_key=api_key, api_base=api_host)
 
         # Create a thread pool
         max_workers = 5
